@@ -1,4 +1,4 @@
-# Contrast Checker
+# Accesibilidad y color
  
 Una herramienta para evaluar el contraste de color entre fondo y figura según los criterios de accesibilidad de la WAI-WCAG.
  
