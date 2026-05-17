@@ -41,13 +41,3 @@ Ratio = (L1 + 0.05) / (L2 + 0.05)
 ```
  
 Donde `L1` es la luminancia del color más claro y `L2` la del más oscuro. El resultado va de 1:1 (sin contraste, colores idénticos) hasta 21:1 (negro sobre blanco).
- 
----
- 
-## Tecnologías
- 
-Vanilla HTML, CSS y JavaScript. Sin dependencias externas. Un solo archivo.
- 
-## Uso
- 
-Abrir `contrast-checker.html` directamente en cualquier navegador moderno.
