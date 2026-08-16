@@ -83,6 +83,49 @@ function renderSwatchPairs() {
 function setbadge(id,pass,cls) {
   document.getElementById(id).className='badge '+(pass?cls:'badge--fail');
 }
+function buildCssOutput() {
+  const hex=side=>{
+    const c=hslToRgb(state[side].h,state[side].s,state[side].l);
+    return '#'+rgbToHex(c.r,c.g,c.b).toUpperCase();
+  };
+  const sel='<span class="tok-sel">', prop='<span class="tok-prop">', val='<span class="tok-val">', end='</span>';
+  const css=[
+    sel+':root'+end+' {',
+    '  '+prop+'--bg'+end+': '+val+hex('bg')+end+';',
+    '  '+prop+'--fg'+end+': '+val+hex('fg')+end+';',
+    '  '+prop+'--ac'+end+': '+val+hex('ac')+end+';',
+    '}',
+    '',
+    sel+'h1, .titular'+end+' {',
+    '  '+prop+'color'+end+': '+val+'var(--ac)'+end+';',
+    '  '+prop+'font-size'+end+': '+val+'2rem'+end+';',
+    '  '+prop+'line-height'+end+': '+val+'1.3'+end+';',
+    '}',
+    '',
+    sel+'p, .parrafo'+end+' {',
+    '  '+prop+'color'+end+': '+val+'var(--fg)'+end+';',
+    '  '+prop+'font-size'+end+': '+val+'1rem'+end+';',
+    '  '+prop+'line-height'+end+': '+val+'1.7'+end+';',
+    '}',
+    '',
+    sel+'button, .boton'+end+' {',
+    '  '+prop+'background'+end+': '+val+'var(--ac)'+end+';',
+    '  '+prop+'color'+end+': '+val+'var(--bg)'+end+';',
+    '  '+prop+'border'+end+': '+val+'2px solid var(--ac)'+end+';',
+    '  '+prop+'border-radius'+end+': '+val+'0.375rem'+end+';',
+    '  '+prop+'padding'+end+': '+val+'0.5rem 1.125rem'+end+';',
+    '  '+prop+'font'+end+': '+val+'inherit'+end+';',
+    '}',
+    '',
+    sel+'a, .link'+end+' {',
+    '  '+prop+'color'+end+': '+val+'var(--ac)'+end+';',
+    '  '+prop+'border-bottom'+end+': '+val+'1.5px solid var(--ac)'+end+';',
+    '  '+prop+'text-decoration'+end+': '+val+'none'+end+';',
+    '}',
+    ''
+  ].join('\n');
+  document.getElementById('output-css').innerHTML=css;
+}
 function updatePreview() {
   const {bg,fg,ac}=getSimColors();
   const bgHex='#'+rgbToHex(bg.r,bg.g,bg.b);
@@ -109,6 +152,7 @@ function updatePreview() {
   const link=document.getElementById('prev-link');
   link.style.color=acHex; link.style.borderColor=acHex;
   renderSwatchPairs();
+  buildCssOutput();
 }
 function updateSliderGradients(side) {
   const h=state[side];
@@ -179,6 +223,30 @@ document.getElementById('cvd-reset').addEventListener('click',()=>{
   document.querySelectorAll('.cvd__btn').forEach(b=>b.classList.remove('is-active'));
   document.getElementById('cvd-active-label').textContent='';
   updatePreview();
+});
+document.getElementById('output-copy').addEventListener('click',function(){
+  const text=document.getElementById('output-css').textContent;
+  const done=()=>{
+    this.textContent='¡Copiado! ✓';
+    this.classList.add('is-copied');
+    setTimeout(()=>{
+      this.textContent='Copiar';
+      this.classList.remove('is-copied');
+    },1500);
+  };
+  const fallback=()=>{
+    const ta=document.createElement('textarea');
+    ta.value=text;
+    ta.style.position='fixed';
+    ta.style.opacity='0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch(e) {}
+    document.body.removeChild(ta);
+  };
+  if (navigator.clipboard&&navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(fallback);
+  } else fallback();
 });
 updateHslSliders('bg');
 updateHslSliders('fg');
