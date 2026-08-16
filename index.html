@@ -9,84 +9,98 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-  <link rel="stylesheet" href="./css/estilos.css">
-  <script src="./js/app.js" defer></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/app.js" defer></script>
 </head>
 <body>
-  <div class="app">
-    <header>
-      <h1>Accesibilidad y <span>color</span></h1>
-      <p>WAI-WCAG Accessibility Rating · Hue · Saturation · Lightness · Daltonismo</p>
-    </header>
-    <div class="grid">
-      <div class="panel">
-        <div class="panel-label">Color de fondo</div>
-        <div class="hex-row">
-          <div class="color-swatch" id="swatch-bg"><input type="color" id="picker-bg" value="#1a1a2e"></div>
-          <div class="hex-input-wrap"><input type="text" class="hex-input" id="hex-bg" maxlength="6" placeholder="1a1a2e" value="1a1a2e"></div>
-        </div>
-        <div class="slider-group">
-          <div class="slider-row"><span class="slider-label">H</span><input type="range" id="h-bg" min="0" max="360" step="1" value="240"><span class="slider-val" id="hv-bg">240°</span></div>
-          <div class="slider-row"><span class="slider-label">S</span><input type="range" id="s-bg" min="0" max="100" step="1" value="36"><span class="slider-val" id="sv-bg">36%</span></div>
-          <div class="slider-row"><span class="slider-label">L</span><input type="range" id="l-bg" min="0" max="100" step="1" value="14"><span class="slider-val" id="lv-bg">14%</span></div>
+  <main class="app">
+    <section class="preview">
+      <div class="preview__stage">
+        <h1 class="preview__title" id="prev-large">Accesibilidad y Color | <span id="ratio-num">—</span> | <span id="ratio-ac">—</span></h1>
+        <p class="preview__text" id="prev-normal">Cuando diseñamos interfaces, elegir colores que se vean bien no siempre es suficiente. Una combinación visualmente atractiva puede resultar ilegible para personas con baja visión, daltonismo o quienes usan pantallas en condiciones de luz adversa. Esta app permite ingresar dos valores hexadecimales —uno para el fondo, otro para el texto o figura— y obtener de inmediato el ratio de contraste y su nivel de conformidad según la WCAG.</p>
+        <div class="preview__actions">
+          <button class="preview__button" id="prev-button">Botón</button>
+          <a class="preview__link" id="prev-link" href="#">Un enlace con el color de acento</a>
         </div>
       </div>
-      <div class="panel">
-        <div class="panel-label">Color de figura / texto</div>
-        <div class="hex-row">
-          <div class="color-swatch" id="swatch-fg"><input type="color" id="picker-fg" value="#e0d7ff"></div>
-          <div class="hex-input-wrap"><input type="text" class="hex-input" id="hex-fg" maxlength="6" placeholder="e0d7ff" value="e0d7ff"></div>
+    </section>
+    <section class="grid">
+      <section class="panel">
+        <h2 class="panel__label eyebrow">Color de fondo</h2>
+        <div class="panel__hex">
+          <div class="panel__swatch" id="swatch-bg"><input type="color" id="picker-bg" value="#030b16" aria-label="Selector de color de fondo"></div>
+          <div class="panel__hex-wrap"><input type="text" class="panel__hex-input" id="hex-bg" maxlength="6" placeholder="030b16" value="030B16" aria-label="Hex del color de fondo"></div>
         </div>
-        <div class="slider-group">
-          <div class="slider-row"><span class="slider-label">H</span><input type="range" id="h-fg" min="0" max="360" step="1" value="253"><span class="slider-val" id="hv-fg">253°</span></div>
-          <div class="slider-row"><span class="slider-label">S</span><input type="range" id="s-fg" min="0" max="100" step="1" value="100"><span class="slider-val" id="sv-fg">100%</span></div>
-          <div class="slider-row"><span class="slider-label">L</span><input type="range" id="l-fg" min="0" max="100" step="1" value="93"><span class="slider-val" id="lv-fg">93%</span></div>
+        <div class="panel__sliders">
+          <div class="panel__slider"><label class="panel__axis" for="h-bg">H</label><input type="range" id="h-bg" min="0" max="360" step="1" value="215"><span class="panel__value" id="hv-bg">215°</span></div>
+          <div class="panel__slider"><label class="panel__axis" for="s-bg">S</label><input type="range" id="s-bg" min="0" max="100" step="1" value="76"><span class="panel__value" id="sv-bg">76%</span></div>
+          <div class="panel__slider"><label class="panel__axis" for="l-bg">L</label><input type="range" id="l-bg" min="0" max="100" step="1" value="5"><span class="panel__value" id="lv-bg">5%</span></div>
         </div>
-      </div>
-    </div>
-    <div class="preview-panel">
-      <div class="preview-label">Vista previa</div>
-      <div class="preview-stage" id="preview-stage">
-        <div class="preview-large" id="prev-large">Título grande — 18pt Bold</div>
-        <div class="preview-normal" id="prev-normal">Texto normal a 16px. El contraste entre colores es fundamental para garantizar que personas con baja visión puedan leer el contenido con facilidad.</div>
-        <div style="display:flex;align-items:center;gap:1rem;">
-          <div class="preview-shape" id="prev-shape">figura</div>
-          <div class="preview-small" id="prev-small">Texto pequeño en monospace · 12px · WCAG evalúa el contraste de luminancia relativa para garantizar legibilidad universal.</div>
+      </section>
+      <section class="panel">
+        <h2 class="panel__label eyebrow">Color de figura / texto</h2>
+        <div class="panel__hex">
+          <div class="panel__swatch" id="swatch-fg">
+            <input type="color" id="picker-fg" value="#cfd7e2" aria-label="Selector de color de figura">
+          </div>
+          <div class="panel__hex-wrap">
+            <input type="text" class="panel__hex-input" id="hex-fg" maxlength="6" placeholder="cfd7e2" value="CFD7E2" aria-label="Hex del color de figura">
+          </div>
         </div>
+        <div class="panel__sliders">
+          <div class="panel__slider"><label class="panel__axis" for="h-fg">H</label><input type="range" id="h-fg" min="0" max="360" step="1" value="215"><span class="panel__value" id="hv-fg">215°</span></div>
+          <div class="panel__slider"><label class="panel__axis" for="s-fg">S</label><input type="range" id="s-fg" min="0" max="100" step="1" value="25"><span class="panel__value" id="sv-fg">25%</span></div>
+          <div class="panel__slider"><label class="panel__axis" for="l-fg">L</label><input type="range" id="l-fg" min="0" max="100" step="1" value="85"><span class="panel__value" id="lv-fg">85%</span></div>
+        </div>
+      </section>
+      <section class="panel">
+        <h2 class="panel__label eyebrow">Color de acento</h2>
+        <div class="panel__hex">
+          <div class="panel__swatch" id="swatch-ac"><input type="color" id="picker-ac" value="#ff843d" aria-label="Selector de color de acento"></div>
+          <div class="panel__hex-wrap"><input type="text" class="panel__hex-input" id="hex-ac" maxlength="6" placeholder="ff843d" value="FF843D" aria-label="Hex del color de acento"></div>
+        </div>
+        <div class="panel__sliders">
+          <div class="panel__slider"><label class="panel__axis" for="h-ac">H</label><input type="range" id="h-ac" min="0" max="360" step="1" value="22"><span class="panel__value" id="hv-ac">22°</span></div>
+          <div class="panel__slider"><label class="panel__axis" for="s-ac">S</label><input type="range" id="s-ac" min="0" max="100" step="1" value="100"><span class="panel__value" id="sv-ac">100%</span></div>
+          <div class="panel__slider"><label class="panel__axis" for="l-ac">L</label><input type="range" id="l-ac" min="0" max="100" step="1" value="62"><span class="panel__value" id="lv-ac">62%</span></div>
+        </div>
+      </section>
+    </section>
+    <section class="results">
+      <div class="results__badges">
+        <div class="badge badge--fail" id="badge-a"><div class="badge__icon"></div><div class="badge__level"><span class="dot dot--a"></span>A</div></div>
+        <div class="badge badge--fail" id="badge-aa"><div class="badge__icon"></div><div class="badge__level"><span class="dot dot--aa"></span>AA</div></div>
+        <div class="badge badge--fail" id="badge-aaa"><div class="badge__icon"></div><div class="badge__level"><span class="dot dot--aaa"></span>AAA</div></div>
+        <div class="badge badge--fail" id="badge-ac"><div class="badge__icon"></div><div class="badge__level" id="accent-level"><span class="dot dot--a"></span>A</div></div>
       </div>
-    </div>
-    <div class="cvd-panel">
-      <div class="cvd-header">
-        <div class="cvd-title">Simulación de daltonismo</div>
-        <button class="cvd-reset" id="cvd-reset">Visión normal</button>
+    </section>
+    <section class="cvd">
+      <div class="cvd__header">
+        <h2 class="cvd__title eyebrow">Simulación de daltonismo</h2>
+        <button class="cvd__reset eyebrow" id="cvd-reset">Visión normal</button>
       </div>
-      <div class="cvd-grid" id="cvd-grid"></div>
-      <div class="cvd-active-label" id="cvd-active-label"></div>
-    </div>
-    <div class="results-panel">
-      <div class="ratio-display">
-        <div class="ratio-number" id="ratio-num">—</div>
-        <div class="ratio-unit">ratio de contraste</div>
-      </div>
-      <div class="badges">
-        <div class="badge fail" id="badge-a"><div class="badge-icon"></div><div class="badge-level"><span class="dot dot-a"></span>A</div><div class="badge-desc">Mínimo</div><div class="badge-req">≥ 3.0:1</div></div>
-        <div class="badge fail" id="badge-aa"><div class="badge-icon"></div><div class="badge-level"><span class="dot dot-aa"></span>AA</div><div class="badge-desc">Aceptable</div><div class="badge-req">≥ 4.5:1 · ≥ 3.0 grande</div></div>
-        <div class="badge fail" id="badge-aaa"><div class="badge-icon"></div><div class="badge-level"><span class="dot dot-aaa"></span>AAA</div><div class="badge-desc">Óptimo</div><div class="badge-req">≥ 7.0:1 · ≥ 4.5 grande</div></div>
-      </div>
-    </div>
-    <div class="wai-info">
-      <h3>Criterios WCAG 2.1 — Contraste de color</h3>
-      <table class="wai-table">
+      <div class="cvd__grid" id="cvd-grid"></div>
+      <div class="cvd__label" id="cvd-active-label"></div>
+    </section>
+    <section class="wai">
+      <h2 class="wai__title eyebrow">Criterios WCAG 2.1 — Contraste de color</h2>
+      <table class="wai__table">
         <thead><tr><th>Nivel</th><th>Texto normal</th><th>Texto grande (+18pt / +14pt bold)</th><th>Uso recomendado</th></tr></thead>
         <tbody>
-          <tr><td><span class="dot dot-a"></span>A</td><td>3.0 : 1</td><td>3.0 : 1</td><td>Mínimo aceptable, solo en casos muy específicos</td></tr>
-          <tr><td><span class="dot dot-aa"></span>AA</td><td>4.5 : 1</td><td>3.0 : 1</td><td>Estándar recomendado para la mayoría de interfaces</td></tr>
-          <tr><td><span class="dot dot-aaa"></span>AAA</td><td>7.0 : 1</td><td>4.5 : 1</td><td>Máxima accesibilidad, ideal para texto crítico</td></tr>
+          <tr><td><span class="dot dot--a"></span>A</td><td>3.0 : 1</td><td>3.0 : 1</td><td>Mínimo aceptable, solo en casos muy específicos</td></tr>
+          <tr><td><span class="dot dot--aa"></span>AA</td><td>4.5 : 1</td><td>3.0 : 1</td><td>Estándar recomendado para la mayoría de interfaces</td></tr>
+          <tr><td><span class="dot dot--aaa"></span>AAA</td><td>7.0 : 1</td><td>4.5 : 1</td><td>Máxima accesibilidad, ideal para texto crítico</td></tr>
         </tbody>
       </table>
+    </section>
+  </main>
+  <footer class="footer app">
+    <div class="footer__brand">
+      <span class="footer__copy">© 2026</span>
+      <span class="footer__name">Dystopia Workshop</span>
+      <img class="footer__logo" src="assets/img/logo.jpg" alt="Logo de Dystopia Workshop">
     </div>
-  </div>
+    <a class="footer__link" href="https://github.com/manuelfernandezdg/accesibilidadColor" target="_blank" rel="noopener">github.com/manuelfernandezdg/accesibilidadColor</a>
+  </footer>
 </body>
 </html>

@@ -40,7 +40,7 @@ function contrastRatio(c1,c2) {
   return (Math.max(l1,l2)+0.05)/(Math.min(l1,l2)+0.05);
 }
  
-const state = { bg:{h:240,s:36,l:14}, fg:{h:253,s:100,l:93} };
+const state = { bg:{h:215,s:76,l:5}, fg:{h:215,s:25,l:85}, ac:{h:22,s:100,l:62} };
  
 const CVD_TYPES = [
   { id:'protanopia',    name:'Protanopia',    sub:'sin rojo · ~1% ♂',    m:[[0.56667,0.43333,0],[0.55833,0.44167,0],[0,0.24167,0.75833]] },
@@ -61,41 +61,53 @@ function applyMatrix(rgb, m) {
 function getSimColors() {
   const bg=hslToRgb(state.bg.h,state.bg.s,state.bg.l);
   const fg=hslToRgb(state.fg.h,state.fg.s,state.fg.l);
-  if (!activeCvd) return {bg,fg};
+  const ac=hslToRgb(state.ac.h,state.ac.s,state.ac.l);
+  if (!activeCvd) return {bg,fg,ac};
   const cvd=CVD_TYPES.find(c=>c.id===activeCvd);
-  return {bg:applyMatrix(bg,cvd.m), fg:applyMatrix(fg,cvd.m)};
+  return {bg:applyMatrix(bg,cvd.m), fg:applyMatrix(fg,cvd.m), ac:applyMatrix(ac,cvd.m)};
 }
 function renderSwatchPairs() {
   const bg=hslToRgb(state.bg.h,state.bg.s,state.bg.l);
   const fg=hslToRgb(state.fg.h,state.fg.s,state.fg.l);
+  const ac=hslToRgb(state.ac.h,state.ac.s,state.ac.l);
   CVD_TYPES.forEach(cvd=>{
-    const sb=applyMatrix(bg,cvd.m), sf=applyMatrix(fg,cvd.m);
-    const pair=document.querySelector('#cvdbtn-'+cvd.id+' .cvd-swatch-pair');
+    const sb=applyMatrix(bg,cvd.m), sf=applyMatrix(fg,cvd.m), sa=applyMatrix(ac,cvd.m);
+    const pair=document.querySelector('#cvdbtn-'+cvd.id+' .cvd__pair');
     if (pair) {
       pair.children[0].style.background='#'+rgbToHex(sb.r,sb.g,sb.b);
       pair.children[1].style.background='#'+rgbToHex(sf.r,sf.g,sf.b);
+      pair.children[2].style.background='#'+rgbToHex(sa.r,sa.g,sa.b);
     }
   });
 }
 function setbadge(id,pass,cls) {
-  document.getElementById(id).className='badge '+(pass?cls:'fail');
+  document.getElementById(id).className='badge '+(pass?cls:'badge--fail');
 }
 function updatePreview() {
-  const {bg,fg}=getSimColors();
+  const {bg,fg,ac}=getSimColors();
   const bgHex='#'+rgbToHex(bg.r,bg.g,bg.b);
   const fgHex='#'+rgbToHex(fg.r,fg.g,fg.b);
+  const acHex='#'+rgbToHex(ac.r,ac.g,ac.b);
   const ratio=contrastRatio(bg,fg);
   const ratioEl=document.getElementById('ratio-num');
   ratioEl.textContent=ratio.toFixed(2)+':1';
   const pA=ratio>=3, pAA=ratio>=4.5, pAAA=ratio>=7;
-  ratioEl.style.color=pAAA?'#3b9fd4':pAA?'#4caf82':pA?'#f0a500':'#ff6a6a';
-  setbadge('badge-a',pA,'pass-a');
-  setbadge('badge-aa',pAA,'pass-aa');
-  setbadge('badge-aaa',pAAA,'pass-aaa');
-  document.getElementById('preview-stage').style.background=bgHex;
-  ['prev-large','prev-normal','prev-small'].forEach(id=>document.getElementById(id).style.color=fgHex);
-  const sh=document.getElementById('prev-shape');
-  sh.style.background=fgHex; sh.style.color=bgHex; sh.style.border='2px solid '+fgHex;
+  setbadge('badge-a',pA,'badge--pass-a');
+  setbadge('badge-aa',pAA,'badge--pass-aa');
+  setbadge('badge-aaa',pAAA,'badge--pass-aaa');
+  const acRatio=contrastRatio(bg,ac);
+  document.getElementById('ratio-ac').textContent=acRatio.toFixed(2)+':1';
+  const lvl=acRatio>=7?'aaa':acRatio>=4.5?'aa':acRatio>=3?'a':null;
+  const lvlEl=document.getElementById('accent-level');
+  lvlEl.innerHTML='<span class="dot dot--'+(lvl||'a')+'"></span>'+(lvl?lvl.toUpperCase():'A');
+  setbadge('badge-ac', !!lvl, lvl?'badge--pass-'+lvl:'badge--fail');
+  document.body.style.background=bgHex;
+  document.getElementById('prev-large').style.color=acHex;
+  document.getElementById('prev-normal').style.color=fgHex;
+  const btn=document.getElementById('prev-button');
+  btn.style.background=acHex; btn.style.borderColor=acHex; btn.style.color=bgHex;
+  const link=document.getElementById('prev-link');
+  link.style.color=acHex; link.style.borderColor=acHex;
   renderSwatchPairs();
 }
 function updateSliderGradients(side) {
@@ -118,7 +130,7 @@ function updateHslSliders(side) {
   updateSliderGradients(side);
   updatePreview();
 }
-['bg','fg'].forEach(side=>{
+['bg','fg','ac'].forEach(side=>{
   ['h','s','l'].forEach(ax=>{
     document.getElementById(ax+'-'+side).addEventListener('input',function(){
       state[side][ax]=parseInt(this.value);
@@ -137,9 +149,9 @@ function updateHslSliders(side) {
     this.value=val.toUpperCase();
     if (val.length===6) {
       const rgb=hexToRgb(val);
-      if (rgb) { this.classList.remove('invalid'); state[side]=rgbToHsl(rgb.r,rgb.g,rgb.b); updateHslSliders(side); }
-      else this.classList.add('invalid');
-    } else this.classList.add('invalid');
+      if (rgb) { this.classList.remove('is-invalid'); state[side]=rgbToHsl(rgb.r,rgb.g,rgb.b); updateHslSliders(side); }
+      else this.classList.add('is-invalid');
+    } else this.classList.add('is-invalid');
   });
   document.getElementById('picker-'+side).addEventListener('input',function(){
     const rgb=hexToRgb(this.value.slice(1));
@@ -150,12 +162,12 @@ function updateHslSliders(side) {
   const grid=document.getElementById('cvd-grid');
   CVD_TYPES.forEach(cvd=>{
     const btn=document.createElement('button');
-    btn.className='cvd-btn'; btn.id='cvdbtn-'+cvd.id;
-    btn.innerHTML='<span class="cvd-name">'+cvd.name+'</span><span class="cvd-sub">'+cvd.sub+'</span><div class="cvd-swatch-pair"><div class="cvd-dot"></div><div class="cvd-dot"></div></div>';
+    btn.className='cvd__btn'; btn.id='cvdbtn-'+cvd.id;
+    btn.innerHTML='<span class="cvd__name">'+cvd.name+'</span><span class="cvd__sub">'+cvd.sub+'</span><div class="cvd__pair"><div class="cvd__dot"></div><div class="cvd__dot"></div><div class="cvd__dot"></div></div>';
     btn.addEventListener('click',()=>{
       activeCvd=activeCvd===cvd.id?null:cvd.id;
-      document.querySelectorAll('.cvd-btn').forEach(b=>b.classList.remove('active'));
-      if (activeCvd) btn.classList.add('active');
+      document.querySelectorAll('.cvd__btn').forEach(b=>b.classList.remove('is-active'));
+      if (activeCvd) btn.classList.add('is-active');
       document.getElementById('cvd-active-label').textContent=activeCvd?'Simulando: '+cvd.name:'';
       updatePreview();
     });
@@ -164,9 +176,10 @@ function updateHslSliders(side) {
 })();
 document.getElementById('cvd-reset').addEventListener('click',()=>{
   activeCvd=null;
-  document.querySelectorAll('.cvd-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.cvd__btn').forEach(b=>b.classList.remove('is-active'));
   document.getElementById('cvd-active-label').textContent='';
   updatePreview();
 });
 updateHslSliders('bg');
 updateHslSliders('fg');
+updateHslSliders('ac');
