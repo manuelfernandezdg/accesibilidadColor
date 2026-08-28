@@ -145,6 +145,7 @@ La interfaz usa tokens CSS en `:root` (capa `tokens`). Los mismos colores que ve
 | `--text` | Texto principal | `#CFD7E2` <span style="background:#CFD7E2">&nbsp;&nbsp;&nbsp;&nbsp;</span> |
 | `--text3` | Texto secundario | `#8A96A8` <span style="background:#8A96A8">&nbsp;&nbsp;&nbsp;&nbsp;</span> |
 
-## Uso
 
-No requiere instalación ni build: abrir `index.html` en el navegador o verlo publicado en [GitHub Pages](https://manuelfernandezdg.github.io/accesibilidadColor/). Todo el estilado vive en `css/estilos.css` y la lógica en `js/app.js`.
+## Licencia
+
+MIT — Copyright (c) 2026 Dystopia Workshop / Dystopia Studio.

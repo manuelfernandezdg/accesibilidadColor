@@ -2,3 +2,9 @@ AGENTS.md
 DESIGN.md
 SKILLS.md
 WORKFLOW.md
+
+node_modules/
+.DS_Store
+*.log
+AGENTS.md
+.gitignore
